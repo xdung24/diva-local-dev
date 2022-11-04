@@ -48,13 +48,3 @@ services:
       - ./redis-ui/settings:/settings
     networks:
       - vidivadev
-
-  mongo-express:
-    image: mongo-express
-    container_name: mongo-express
-    env_file:
-      - ./mongo-express/env.txt
-    networks:
-    - vidivadev
-    ports:
-    - 8081:8081
