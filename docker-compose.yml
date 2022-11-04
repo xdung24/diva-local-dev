@@ -1,0 +1,60 @@
+version: '3.1'
+networks:
+  vidivadev:
+    name: vidivadev
+    external: true
+
+services:
+  phpmyadmin:
+    image: phpmyadmin
+    container_name: phpmyadmin
+    environment:
+      - PMA_ARBITRARY=1
+      - UPLOAD_LIMIT=500M
+    restart: always
+    ports:
+      - 8080:80
+    networks:
+      - vidivadev
+    volumes:
+      - /sessions
+      - ./phpmyadmin/config.user.inc.php:/etc/phpmyadmin/config.user.inc.php
+      - ./phpmyadmin/php.ini:/usr/local/etc/php/php.ini
+      - /var/run/mysqld/mysqld.sock:/tmp/mysqld.sock
+
+  dns-server:
+    image: xdung24/dns-server
+    container_name: dns-server
+    restart: always
+    environment:
+      - HTTP_USER=changeme
+      - HTTP_PASS=changeme
+    ports:
+      # - 8081:8080/tcp  # uncomment to use web ui
+      - 53:53/udp
+      - 53:53/tcp
+    volumes:
+      - ./dns-server/dnsmasq.conf:/etc/dnsmasq.conf
+    networks:
+      - vidivadev
+
+  redis-ui:
+    image: xdung24/redis-ui
+    container_name: redis-ui
+    restart: always
+    ports:
+      - 7843:7843
+    volumes:
+      - ./redis-ui/settings:/settings
+    networks:
+      - vidivadev
+
+  mongo-express:
+    image: mongo-express
+    container_name: mongo-express
+    env_file:
+      - ./mongo-express/env.txt
+    networks:
+    - vidivadev
+    ports:
+    - 8081:8081
