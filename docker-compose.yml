@@ -60,3 +60,14 @@ services:
       PGADMIN_DEFAULT_PASSWORD: admin
     volumes:
       - ./pgadmin:/var/lib/pgadmin
+    networks:
+      - vidivadev
+
+  mongodb-gui:
+    image: samueltallet/mongodb-php-gui
+    container_name: mongodb-gui
+    restart: always
+    ports:
+      - 8084:5000
+    networks:
+      - vidivadev
