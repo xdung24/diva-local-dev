@@ -5,23 +5,6 @@ networks:
     external: true
 
 services:
-  phpmyadmin:
-    image: phpmyadmin
-    container_name: phpmyadmin
-    environment:
-      - PMA_ARBITRARY=1
-      - UPLOAD_LIMIT=500M
-    restart: always
-    ports:
-      - 8080:80
-    networks:
-      - vidivadev
-    volumes:
-      - /sessions
-      - ./phpmyadmin/config.user.inc.php:/etc/phpmyadmin/config.user.inc.php
-      - ./phpmyadmin/php.ini:/usr/local/etc/php/php.ini
-      - /var/run/mysqld/mysqld.sock:/tmp/mysqld.sock
-
   dns-server:
     image: xdung24/dns-server
     container_name: dns-server
@@ -30,7 +13,7 @@ services:
       - HTTP_USER=changeme
       - HTTP_PASS=changeme
     ports:
-      # - 8081:8080/tcp  # uncomment to use web ui
+      # - 8080:8080/tcp  # uncomment to use web ui
       - 53:53/udp
       - 53:53/tcp
     volumes:
@@ -38,13 +21,42 @@ services:
     networks:
       - vidivadev
 
+  phpmyadmin:
+    image: phpmyadmin
+    container_name: phpmyadmin
+    environment:
+      - PMA_ARBITRARY=1
+      - UPLOAD_LIMIT=500M
+    restart: always
+    ports:
+      - 8081:80
+    networks:
+      - vidivadev
+    volumes:
+      - /sessions
+      - ./phpmyadmin/config.user.inc.php:/etc/phpmyadmin/config.user.inc.php
+      - ./phpmyadmin/php.ini:/usr/local/etc/php/php.ini
+      - /var/run/mysqld/mysqld.sock:/tmp/mysqld.sock
+
   redis-ui:
     image: xdung24/redis-ui
     container_name: redis-ui
     restart: always
     ports:
-      - 7843:7843
+      - 8082:7843
     volumes:
       - ./redis-ui/settings:/settings
     networks:
       - vidivadev
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    restart: always
+    ports:
+      - 8083:80
+    environment:
+      PGADMIN_DEFAULT_EMAIL: pg@email.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    volumes:
+      - ./pgadmin:/var/lib/pgadmin
