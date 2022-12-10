@@ -1,3 +1,12 @@
 <?php
 $cfg['LoginCookieValidity'] = 172800;
-//$cfg['ThemeDefault'] = 'metro';
+// **avaliable themes**
+// command: cd /var/www/html/themes/ && ls -d */ | cut -f1 -d'/'
+// blueberry
+// boodark
+// bootstrap
+// darkwolf
+// metro
+// original
+// pmahomme
+$cfg['ThemeDefault'] = 'pmahomme';
